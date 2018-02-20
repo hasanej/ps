@@ -71,7 +71,7 @@ class BeritaController extends Controller
         if($gambar!=null)
         {
             //Menamakan file gambar
-            $nama = 'gambar_'.md5(microtime(true)).md5($gambar->getClientOriginalName()).'.'.$gambar->extension(); 
+            $nama = md5(microtime(true)).md5($gambar->getClientOriginalName()).'.'.$gambar->extension(); 
 
             //Memindahkan file gambar ke folder upload/gambar_berita
             $gambar->move(public_path('upload/gambar_berita'), $nama);
@@ -191,7 +191,7 @@ class BeritaController extends Controller
             File::delete(public_path('upload/gambar_berita/'.$gambar_lama));
 
             //Menamakan file gambar baru
-            $nama = 'gambar_'.md5(microtime(true)).md5($gambar->getClientOriginalName()).'.'.$gambar->extension();
+            $nama = md5(microtime(true)).md5($gambar->getClientOriginalName()).'.'.$gambar->extension();
 
             //Memindahkan file gambar baru ke folder upload/gambar_berita
             $gambar->move(public_path('upload/gambar_berita'), $nama);
