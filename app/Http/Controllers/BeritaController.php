@@ -98,7 +98,7 @@ class BeritaController extends Controller
                     if($ext=='doc' || $ext=='docx' || $ext=='xls' || $ext=='xlsx' || $ext=='ppt' || $ext=='pptx' || $ext=='pdf')
                     {
                         //Menamakan file
-                        $nama = $file->getClientOriginalName();
+                        $nama = $file->getClientOriginalName().'_'.microtime(true);
 
                         //Memindahkan file ke folder upload/file_berita
                         $file->move(public_path('upload/file_berita'), $nama);
