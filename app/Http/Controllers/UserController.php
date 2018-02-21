@@ -10,40 +10,43 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
-use App\Role;
-use App\User;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Auth; //Laravel Auth
+use App\Role; //Model role
+use App\User; //Model user
+use Illuminate\Http\Request; //Library untuk request input
+use App\Http\Controllers\Controller; //Controller Laravel 
 
 class UserController extends Controller
 {
     
+    //Fungsi yang otomatis dijalankan saat controller dipanggil 
     public function __construct()
     {
-        //Memanggil middleware auth
+        //Autentifikasi
         $this->middleware('auth');
     }
 
+    //Fungsi default yang dipanggil 
     public function index() 
     {
         //Nomor urut data pada view
         $number = 0;
 
-        //Mengambil daftar user
+        //Mengambil daftar user dari tabel users
     	$data = User::where('id_role', '=', 3)->orderBy('id', 'DESC')->get();
 
         //Menampilkan daftar user ke view
         return view('admin.user.index', compact('data', 'number'));
     }
 
+    //Fungsi menampilkan view tambah user
     public function create()
     {
         //Menampilkan view tambah user
         return view('admin.user.tambah', compact('role'));
     }
 
+    //Fungsi menyimpan user baru
     public function store(Request $request)
     {
         //Validasi form
@@ -63,23 +66,25 @@ class UserController extends Controller
             'id_role' => 3,
         ];
 
-        //Menyimpan data user
+        //Menyimpan data user ke tabel users
         User::create($input); 
 
         //Redirect ke halaman indeks user
         return redirect()->route('user.index')
-            ->with('success','User berhasil ditambah');
+            ->with('feedback','<div class="alert alert-success"><p>User berhasil ditambah</p></div>');
     }
 
+    //Fungsi menampilkan view edit user
     public function edit($id)
     {
-        //Ambil data user yang dipilih
+        //Ambil data user yang dipilih dari tabel users
         $data = User::find($id);
 
         //Menampilkan form edit
         return view('admin.user.ubah',compact('data'));
     }
 
+    //Fungsi update user
     public function update(Request $request, $id)
     {
         //Ambil username dan email lama
@@ -167,9 +172,10 @@ class UserController extends Controller
         
         //Redirect ke halaman indeks user
         return redirect()->route('user.index')
-            ->with('success','User berhasil di update');
+            ->with('feedback','<div class="alert alert-success"><p>User berhasil di update</p></div>');
     }
 
+    //Fungsi hapus user
     public function destroy($id)
     {
         //Ambil id user yang sedang log in
@@ -179,14 +185,16 @@ class UserController extends Controller
         if($id==$logged_in)
         {
             //Redirect ke halaman indeks user
-            return redirect()->route('user.index')->with('success','GAGAL - USER SEDANG LOGIN !');
+            return redirect()->route('user.index')
+                ->with('feedback','<div class="alert alert-danger"><p>GAGAL - USER SEDANG LOGIN !</p></div>');
         }
 
-        //Hapus user
+        //Hapus user dari tabel users
         User::find($id)->delete();
 
         //Redirect ke halaman indeks user
-        return redirect()->route('user.index')->with('success','User berhasil dihapus');
+        return redirect()->route('user.index')
+            ->with('feedback','<div class="alert alert-success"><p>User berhasil dihapus</p></div>');
     }
 
 }
