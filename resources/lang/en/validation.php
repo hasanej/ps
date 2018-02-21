@@ -13,7 +13,6 @@ return [
     |
     */
 
-    'document'             => 'Format file yang didukung : doc, docx, xls, xlsx, ppt, pptx, pdf.',
     'accepted'             => 'The :attribute must be accepted.',
     'active_url'           => 'The :attribute is not a valid URL.',
     'after'                => 'The :attribute must be a date after :date.',
@@ -131,9 +130,6 @@ return [
         'gambar' => [
             'image' => 'Format gambar yang didukung : jpeg, jpg, png, bmp, gif, svg.',
             'max' => 'Gambar tidak boleh lebih dari :max KB.', 
-        ],
-        'gambar' => [
-            'max' => 'File tidak boleh lebih dari :max KB.', 
         ],
     ],
 

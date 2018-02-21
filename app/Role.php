@@ -10,12 +10,13 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model; //Model Laravel
 
 class Role extends Model
 {
-    protected $table = 'tb_role';
+    protected $table = 'tb_role'; //Koneksi ke tb_role
 
+    //Reverse relation ke user
     public function user()
     {
     	return $this->belongsTo('App\User', 'id_role', 'id');

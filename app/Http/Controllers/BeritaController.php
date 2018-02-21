@@ -10,44 +10,48 @@
 
 namespace App\Http\Controllers;
 
-use Image;
-use File;
-use App\Berita;
-use App\FilesBerita;
-use App\Kategori;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Image; //Library tambahan untuk manipulasi gambar
+use File; //Library upload file
+use App\Berita; //Model berita
+use App\FilesBerita; //Model file berita
+use App\Kategori; //Model kategori
+use Illuminate\Http\Request; //Library untuk request input
+use App\Http\Controllers\Controller; //Controller laravel 
 
 class BeritaController extends Controller
 {
 
+    //Fungsi yang otomatis dijalankan saat controller dipanggil 
     public function __construct()
     {
         //Autentifikasi
         $this->middleware('auth');
     }
 
+    //Fungsi default yang dipanggil 
     public function index()
     {
         //Nomor urut data pada view
         $number = 0;
 
-        //Mengambil data berita
+        //Mengambil data berita dari tb_berita
         $data = Berita::orderBy('id','DESC')->paginate(10);
 
         //Menampilkan data berita ke view
         return view('admin.berita.index',compact('data','number'));
     }
 
+    //Fungsi menampilkan view tambah berita
     public function create()
     {
-        //Mengambil list kategori untuk ditampilkan ke Form::select
+        //Mengambil list kategori dari tb_kategori untuk ditampilkan ke Form::select
         $kategori = Kategori::pluck('nama', 'id');
 
         //Menampilkan view tambah berita
         return view('admin.berita.tambah', compact('kategori'));
     }
 
+    //Fungsi menyimpan berita
     public function store(Request $request)
     {
         //Validasi form
@@ -60,11 +64,14 @@ class BeritaController extends Controller
         //Mengambil semua data input kecuali input file
         $inputBerita = $request->except('file');
 
+        $gambar = $request->file('gambar'); //Mengambil input gambar
+        $files = $request->file('file'); //Mengambil input file
+
         //Proses jika ada input gambar
-        if($gambar = $request->file('gambar'))
+        if($gambar!=null)
         {
             //Menamakan file gambar
-            $nama = 'gambar_'.md5(microtime(true)).md5($gambar->getClientOriginalName()).'.'.$gambar->extension(); 
+            $nama = md5(microtime(true)).md5($gambar->getClientOriginalName()).'.'.$gambar->extension(); 
 
             //Memindahkan file gambar ke folder upload/gambar_berita
             $gambar->move(public_path('upload/gambar_berita'), $nama);
@@ -75,7 +82,7 @@ class BeritaController extends Controller
             $cons->upsize();
             })->save(public_path('upload/gambar_berita/'.$nama));
 
-            //Input data ke database
+            //Meletakkan nilai gambar ke array
             $inputBerita['gambar'] = $nama;
         }      
 
@@ -83,47 +90,48 @@ class BeritaController extends Controller
         $berita = Berita::create($inputBerita);   
 
         //Proses jika ada input file
-        if($files = $request->file('file'))
+        if($files[0]!=null)
         {
             //Foreach digunakan karena input berupa array (Multiple files)
             foreach($files as $file)
             {
-                //Proses jika input file tidak kosong
-                if($file!=null)
+                //Ambil ekstensi file 
+                $ext = $file->extension(); 
+
+                //Validasi tipe file
+                if($ext=='doc' || $ext=='docx' || $ext=='xls' || $ext=='xlsx' || $ext=='ppt' || $ext=='pptx' || $ext=='pdf')
                 {
-                    //Ambil ekstensi file 
-                    $ext = $file->extension(); 
+                    //Menamakan file
+                    $nama = time().'_'.$file->getClientOriginalName();
 
-                    //Validasi tipe file
-                    if($ext=='doc' || $ext=='docx' || $ext=='xls' || $ext=='xlsx' || $ext=='ppt' || $ext=='pptx' || $ext=='pdf')
-                    {
-                        //Menamakan file
-                        $nama = $file->getClientOriginalName().'_'.microtime(true);
-
-                        //Memindahkan file ke folder upload/file_berita
-                        $file->move(public_path('upload/file_berita'), $nama);
+                    //Memindahkan file ke folder upload/file_berita
+                    $file->move(public_path('upload/file_berita'), $nama);
                       
-                        //Input file ke tb_file_berita
-                        FilesBerita::create([
-                            'id_berita' => $berita->id,
-                            'file' => $nama
-                        ]);
-                    }
-                    else
-                    {   
-                        //Pesan error 
-                        $errors = "Format file yang didukung : doc, docx, xls, xlsx, ppt, pptx, pdf";
-
-                        //Hapus berita agar data tidak duplikat 
-                        Berita::find($berita->id)->delete();
-
-                        //Reload halaman
-                        return redirect()->back()
-                            ->withErrors($errors)
-                            ->withInput($request->input());
-                    }
+                    //Input file ke tb_file_berita
+                    FilesBerita::create([
+                        'id_berita' => $berita->id,
+                        'file' => $nama
+                    ]);
                 }
+                else
+                {   
+                    //Pesan error 
+                    $errors = "Format file yang didukung : doc, docx, xls, xlsx, ppt, pptx, pdf";
 
+                    //Mengambil nama gambar
+                    $gambar = Berita::where('id', $berita->id)->first()->gambar;
+                        
+                    //Hapus gambar
+                    File::delete(public_path('upload/gambar_berita/'.$gambar));
+
+                    //Hapus berita agar data tidak duplikat 
+                    Berita::find($berita->id)->delete();
+
+                    //Reload halaman
+                    return redirect()->back()
+                        ->withErrors($errors)
+                        ->withInput($request->input());
+                }
             }
         }
 
@@ -141,21 +149,23 @@ class BeritaController extends Controller
         return view('admin.berita.show',compact('data'));
     }
 
+    //Fungsi menampilkan view edit berita
     public function edit($id)
     {
-        //Mengambil list kategori untuk ditampilkan ke Form::select
+        //Mengambil list kategori dari tb_kategori untuk ditampilkan ke Form::select
         $kategori = Kategori::pluck('nama', 'id');
 
         //Ambil data berita yang dipilih dari tb_berita
         $data = Berita::find($id);
 
-        //Ambil daftar file
+        //Ambil daftar file dari tb_file_berita
         $daftarFile = FilesBerita::where('id_berita', $id)->get();
 
         //Menampilkan form edit
         return view('admin.berita.ubah',compact('data', 'kategori', 'daftarFile'));
     }
 
+    //Fungsi update berita
     public function update(Request $request, $id)
     {
         //Validasi form
@@ -165,20 +175,23 @@ class BeritaController extends Controller
             'gambar' => 'image|max:2048', //Format gambar yang didukung : jpeg, png, bmp, gif, svg
         ]);
 
-        //Mengambil nama file gambar
-        $file = Berita::where('id', $id)->first()->gambar;
-
         //Mengambil semua data input kecuali input file
         $inputBerita = $request->except('file');
 
-        //Cek ada gambar atau tidak
-        if($gambar = $request->file('gambar'))
+        $gambar = $request->file('gambar'); //Mengambil input gambar
+        $files = $request->file('file'); //Mengambil input file
+
+        //Proses jika ada input gambar
+        if($gambar!=null)
         {
-            //Hapus file gambar sebelumnya
-            File::delete(public_path('upload/gambar_berita/'.$file));
+            //Mengambil gambar lama
+            $gambar_lama = Berita::where('id', $id)->first()->gambar;
+            
+            //Hapus gambar lama
+            File::delete(public_path('upload/gambar_berita/'.$gambar_lama));
 
             //Menamakan file gambar baru
-            $nama = 'gambar_'.md5(microtime(true)).md5($gambar->getClientOriginalName()).'.'.$gambar->extension();
+            $nama = md5(microtime(true)).md5($gambar->getClientOriginalName()).'.'.$gambar->extension();
 
             //Memindahkan file gambar baru ke folder upload/gambar_berita
             $gambar->move(public_path('upload/gambar_berita'), $nama);
@@ -193,86 +206,64 @@ class BeritaController extends Controller
             $inputBerita['gambar'] = $nama;
         }
 
-        // $berita = Berita::find($id)->with('fileBerita')->get(); dd($berita->toArray());      
+        //Update data berita pada tb_berita
+        Berita::find($id)->update($inputBerita); 
 
         //Proses jika ada input file
-        if($files = $request->file('file'))
+        if($files[0]!=null)
         {
-            // dd($files);
+            //Mengambil daftar file(s) lama 
+            $files_lama = FilesBerita::where('id_berita', $id)->pluck('file');
+
+            //Hapus file(s) lama
+            foreach($files_lama as $file_lama)
+            {
+                File::delete(public_path('upload/file_berita/'.$file_lama));
+            }
+
+            //Hapus data file berita dari tb_file_berita
+            FilesBerita::where('id_berita',$id)->delete();
+    
             //Foreach digunakan karena input berupa array (Multiple files)
             foreach($files as $file)
             {
-                //Proses jika input file tidak kosong
-                if($file!=null)
+                //Ambil ekstensi file 
+                $ext = $file->extension(); 
+
+                //Validasi tipe file
+                if($ext=='doc' || $ext=='docx' || $ext=='xls' || $ext=='xlsx' || $ext=='ppt' || $ext=='pptx' || $ext=='pdf')
                 {
-                    //Ambil ekstensi file 
-                    $ext = $file->extension(); 
+                    //Menamakan file
+                    $nama = time().'_'.$file->getClientOriginalName();
 
-                    //Validasi tipe file
-                    if($ext=='doc' || $ext=='docx' || $ext=='xls' || $ext=='xlsx' || $ext=='ppt' || $ext=='pptx' || $ext=='pdf')
-                    {
-                        // //Mengambil daftar file(s) 
-                        // $files_lama = FilesBerita::where('id_berita', $id)->pluck('file');
-
-                        // //Hapus file(s)
-                        // foreach($files_lama as $file_lama)
-                        // {
-                        //     File::delete(public_path('upload/file_berita/'.$file_lama));
-                        // }
-
-                        //Menamakan file
-                        $nama = $file->getClientOriginalName();
-
-                        //Memindahkan file ke folder upload/file_berita
-                        $file->move(public_path('upload/file_berita'), $nama);
+                    //Memindahkan file ke folder upload/file_berita
+                    $file->move(public_path('upload/file_berita'), $nama);
                       
-                        // FilesBerita::where('id_berita', $id)->delete();
-
-                        //Input file ke tb_file_berita
-                        // FilesBerita::create([
-                        //     'id_berita' => $id,
-                        //     'file' => $nama,
-                        // ]);
-
-                        $inputFile['id_berita'] = $id;
-                        $inputFile['file'] = $nama;
-                    }
-                    else
-                    {   
-                        //Pesan error 
-                        $errors = "Format file yang didukung : doc, docx, xls, xlsx, ppt, pptx, pdf";
-
-                        //Reload halaman
-                        return redirect()->back()
-                            ->withErrors($errors)
-                            ->withInput($request->input());
-                    }
+                    //Input file ke tb_file_berita
+                    FilesBerita::create([
+                        'id_berita' => $id,
+                        'file' => $nama
+                    ]);
                 }
+                else
+                {   
+                    //Pesan error 
+                    $errors = "Format file yang didukung : doc, docx, xls, xlsx, ppt, pptx, pdf";
 
+                    //Reload halaman
+                    return redirect()->back()
+                        ->withErrors($errors)
+                        ->withInput($request->input());
+                }
             }
         }
-
-        //Mengambil daftar file(s) 
-        $files_lama = FilesBerita::where('id_berita', $id)->pluck('file');
-
-        //Hapus file(s)
-        foreach($files_lama as $file_lama)
-        {
-            File::delete(public_path('upload/file_berita/'.$file_lama));
-        }
-
-        FilesBerita::where('id_berita',$id)->delete();
-
-        FilesBerita::create($inputFile);
-
-        //Update data berita pada tb_berita
-        Berita::find($id)->update($inputBerita); 
 
         //Redirect ke halaman indeks berita
         return redirect()->route('berita.index')
             ->with('success','Berita berhasil di update');
     }
     
+    //Fungsi hapus berita
     public function destroy($id)
     {
         //Mengambil nama gambar
@@ -280,7 +271,6 @@ class BeritaController extends Controller
 
         //Mengambil daftar file(s) 
         $files = FilesBerita::where('id_berita', $id)->pluck('file');
-        // dd($files->toArray());
 
         //Hapus gambar
         File::delete(public_path('upload/gambar_berita/'.$gambar));
