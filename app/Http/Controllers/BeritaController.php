@@ -16,7 +16,7 @@ use App\Berita; //Model berita
 use App\FilesBerita; //Model file berita
 use App\Kategori; //Model kategori
 use Illuminate\Http\Request; //Library untuk request input
-use App\Http\Controllers\Controller; //Controller laravel 
+use App\Http\Controllers\Controller; //Controller Laravel 
 
 class BeritaController extends Controller
 {
