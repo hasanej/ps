@@ -35,7 +35,7 @@ class BeritaController extends Controller
         $number = 0;
 
         //Mengambil data berita dari tb_berita
-        $data = Berita::orderBy('id','DESC')->paginate(10);
+        $data = Berita::orderBy('id','DESC')->get();
 
         //Menampilkan data berita ke view
         return view('admin.berita.index',compact('data','number'));
