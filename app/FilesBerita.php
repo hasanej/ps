@@ -10,14 +10,16 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model; //Model Laravel
 
 class FilesBerita extends Model
 {
-	protected $table = 'tb_file_berita';
+	protected $table = 'tb_file_berita'; //Koneksi ke tb_file_berita
 
+    //Kolom yang dapat diisi
     public $fillable = ['file', 'id_berita'];
 
+    //Reverse relationship ke berita
     public function berita()
     {
         return $this->belongsTo('App\Berita', 'id', 'id_berita');

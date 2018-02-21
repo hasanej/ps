@@ -10,19 +10,21 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model; //Model Laravel
 
 class Kategori extends Model
 {
-    protected $table = 'tb_kategori';
+    protected $table = 'tb_kategori'; //Koneksi ke tb_kategori
 
-    public $fillable = ['nama'];
+    public $fillable = ['nama']; //Kolom yang dapat diisi
 
+    //Reverse relationship ke berita
     public function berita()
     {
         return $this->belongsTo('App\Berita', 'id_kategori', 'id');
     }
 
+    //Reverse relationship ke artikel
     public function artikel()
     {
         return $this->belongsTo('App\Artikel', 'id_kategori', 'id');

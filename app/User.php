@@ -10,28 +10,15 @@
 
 namespace App;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable; //Laravel Auth
 
 class User extends Authenticatable
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'username', 'email', 'password', 'id_role'
-    ];
+    protected $fillable = ['name', 'username', 'email', 'password', 'id_role']; //Kolom yang dapat diisi
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token',]; 
 
+    //Setiap user punya satu role
     public function role()
     {
         return $this->hasOne('App\Role', 'id', 'id_role');
