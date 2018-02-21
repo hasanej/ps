@@ -137,7 +137,7 @@ class BeritaController extends Controller
 
         //Redirect ke halaman indeks berita
         return redirect()->route('berita.index')
-            ->with('success','Berita berhasil ditambah');
+            ->with('feedback','<div class="alert alert-success"><p>Berita berhasil ditambah</p></div>');
     }
 
     public function show($id)
@@ -260,7 +260,7 @@ class BeritaController extends Controller
 
         //Redirect ke halaman indeks berita
         return redirect()->route('berita.index')
-            ->with('success','Berita berhasil di update');
+            ->with('feedback','<div class="alert alert-success"><p>Berita berhasil di update</p></div>');
     }
     
     //Fungsi hapus berita
@@ -293,7 +293,7 @@ class BeritaController extends Controller
 
         //Redirect ke halaman indeks berita
         return redirect()->route('berita.index')
-            ->with('success','Berita berhasil dihapus');
+            ->with('feedback','<div class="alert alert-success"><p>Berita berhasil dihapus</p></div>');
     }
 
 }
