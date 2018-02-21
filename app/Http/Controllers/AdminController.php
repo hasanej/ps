@@ -10,45 +10,46 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Auth;
-use App\Role;
-use App\User;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Auth; //Laravel Auth
+use App\Role; //Model role
+use App\User; //Model user
+use Illuminate\Http\Request; //Library untuk request input
+use App\Http\Controllers\Controller; //Controller Laravel 
 
 class AdminController extends Controller
 {
     
+    //Fungsi yang otomatis dijalankan saat controller dipanggil 
     public function __construct()
     {
-        //Memanggil middleware auth
+        //Autentifikasi
         $this->middleware('auth');
     }
 
+    //Fungsi default yang dipanggil 
     public function index() 
     {
         //Nomor urut data pada view
         $number = 0;
 
-        //Mengambil daftar admin
+        //Mengambil daftar admin dari tabel users
     	$data = User::where('id_role', '<', 3)->orderBy('id', 'DESC')->with('role')->get();
-
-        // dd($data->toArray());
 
         //Menampilkan daftar admin ke view
         return view('admin.admin.index', compact('data', 'number'));
     }
 
+    //Fungsi menampilkan view tambah user
     public function create()
     {
-        //Mengambil daftar role
+        //Mengambil daftar role dari tb_role
         $role = Role::where('id', '<', 3)->pluck('nama', 'id');
 
         //Menampilkan view tambah admin
         return view('admin.admin.tambah', compact('role'));
     }
 
+    //Fungsi menyimpan admin baru
     public function store(Request $request)
     {
         //Validasi form
@@ -73,21 +74,23 @@ class AdminController extends Controller
 
         //Redirect ke halaman indeks admin
         return redirect()->route('admin.index')
-            ->with('success','Admin berhasil ditambah');
+            ->with('feedback','<div class="alert alert-success"><p>Admin berhasil ditambah</p></div>');
     }
 
+    //Fungsi menampilkan view edit user
     public function edit($id)
     {
-        //Ambil data admin yang dipilih
+        //Ambil data admin yang dipilih dari tabel users
         $data = User::find($id);
 
-        //Mengambil daftar role
+        //Mengambil daftar role dari tb_role
         $role = Role::where('id', '<', 3)->pluck('nama', 'id');
         
         //Menampilkan form edit
         return view('admin.admin.ubah',compact('data', 'role'));
     }
 
+    //Fungsi update admin
     public function update(Request $request, $id)
     {
         //Ambil username dan email lama
@@ -175,9 +178,10 @@ class AdminController extends Controller
         
         //Redirect ke halaman indeks admin
         return redirect()->route('admin.index')
-            ->with('success','Admin berhasil di update');
+            ->with('success','<div class="alert alert-success"><p>Admin berhasil di update</p></div>');
     }
 
+    //Fungsi hapus user
     public function destroy($id)
     {
         //Ambil id user yang sedang log in
@@ -187,14 +191,16 @@ class AdminController extends Controller
         if($id==$logged_in)
         {
             //Redirect ke halaman indeks admin
-            return redirect()->route('admin.index')->with('success','GAGAL - ANDA SEDANG LOGIN !');
+            return redirect()->route('admin.index')
+                ->with('feedback','<div class="alert alert-danger"><p>GAGAL - ANDA SEDANG LOGIN !</p></div>');
         }
 
         //Hapus admin
         User::find($id)->delete();
 
         //Redirect ke halaman indeks admin
-        return redirect()->route('admin.index')->with('success','Admin berhasil dihapus');
+        return redirect()->route('admin.index')
+            ->with('feedback','<div class="alert alert-success"><p>Admin berhasil dihapus</p></div>');
     }
 
 }

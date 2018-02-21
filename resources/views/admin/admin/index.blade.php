@@ -3,10 +3,8 @@
 @section('content')
 <div class="row">
     <div class="col-md-12 m-t-20">
-        @if ($message = Session::get('success'))
-            <div class="alert alert-success">
-                <p>{{ $message }}</p>
-            </div>
+        @if ($message = Session::get('feedback'))
+            {!! $message !!}
         @endif
     </div>
     <div class="col-xs-12">
