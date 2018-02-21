@@ -16,7 +16,7 @@ use App\Berita; //Model berita
 use App\FilesBerita; //Model file berita
 use App\Kategori; //Model kategori
 use Illuminate\Http\Request; //Library untuk request input
-use App\Http\Controllers\Controller; //Controller laravel 
+use App\Http\Controllers\Controller; //Controller Laravel 
 
 class BeritaController extends Controller
 {
@@ -35,7 +35,7 @@ class BeritaController extends Controller
         $number = 0;
 
         //Mengambil data berita dari tb_berita
-        $data = Berita::orderBy('id','DESC')->paginate(10);
+        $data = Berita::orderBy('id','DESC')->get();
 
         //Menampilkan data berita ke view
         return view('admin.berita.index',compact('data','number'));
@@ -137,7 +137,7 @@ class BeritaController extends Controller
 
         //Redirect ke halaman indeks berita
         return redirect()->route('berita.index')
-            ->with('success','Berita berhasil ditambah');
+            ->with('feedback','<div class="alert alert-success"><p>Berita berhasil ditambah</p></div>');
     }
 
     public function show($id)
@@ -260,7 +260,7 @@ class BeritaController extends Controller
 
         //Redirect ke halaman indeks berita
         return redirect()->route('berita.index')
-            ->with('success','Berita berhasil di update');
+            ->with('feedback','<div class="alert alert-success"><p>Berita berhasil di update</p></div>');
     }
     
     //Fungsi hapus berita
@@ -293,7 +293,7 @@ class BeritaController extends Controller
 
         //Redirect ke halaman indeks berita
         return redirect()->route('berita.index')
-            ->with('success','Berita berhasil dihapus');
+            ->with('feedback','<div class="alert alert-success"><p>Berita berhasil dihapus</p></div>');
     }
 
 }
