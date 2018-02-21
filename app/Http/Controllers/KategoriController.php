@@ -10,37 +10,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Kategori;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Kategori; //Model Kategori
+use Illuminate\Http\Request; //Library untuk request input
+use App\Http\Controllers\Controller; //Controller Laravel 
 
 class KategoriController extends Controller
 {
 
+    //Fungsi yang otomatis dijalankan saat controller dipanggil 
     public function __construct()
     {
-        //Memanggil middleware auth
+        //Autentifikasi
         $this->middleware('auth');
     }
 
+    //Fungsi default yang dipanggil 
     public function index()
     {
         //Nomor urut data pada view
         $number = 0;
 
-        //Mengambil daftar kategori
-        $data = Kategori::orderBy('id','DESC')->paginate(10);
+        //Mengambil daftar kategori dari tb_kategori
+        $data = Kategori::orderBy('id','DESC')->get();
 
         //Menampilkan daftar kategori ke view
         return view('admin.kategori.index',compact('data','number'));
     }
 
+    //Fungsi menampilkan view tambah kategori
     public function create()
     {
         //Menampilkan view tambah kategori
         return view('admin.kategori.tambah');
     }
 
+    //Fungsi menyimpan kategori
     public function store(Request $request)
     {
         //Validasi form
@@ -51,23 +55,25 @@ class KategoriController extends Controller
         //Mengambil semua data input
         $input = $request->all();
 
-        //Menyimpan data kategori ke tabel
+        //Menyimpan data kategori ke tb_kategori
         Kategori::create($input); 
 
         //Redirect ke halaman indeks kategori
         return redirect()->route('kategori.index')
-            ->with('success','Kategori berhasil ditambah');
+            ->with('feedback','<div class="alert alert-success"><p>Kategori berhasil ditambah</p></div>');
     }
 
+    //Fungsi menampilkan view edit kategori
     public function edit($id)
     {
-        //Ambil data kategori yang dipilih dari tabel
+        //Ambil data kategori yang dipilih dari tb_kategori
         $data = Kategori::find($id);
 
         //Menampilkan form edit
         return view('admin.kategori.ubah',compact('data'));
     }
 
+    //Fungsi update kategori
     public function update(Request $request, $id)
     {
         //Validasi form
@@ -78,22 +84,23 @@ class KategoriController extends Controller
         //Mengambil semua data input
         $input = $request->all();
 
-        //Update data kategori yang dipilih pada tabel
+        //Update data kategori yang dipilih pada tb_kategori
         Kategori::find($id)->update($input);
 
         //Redirect ke halaman indeks kategori
         return redirect()->route('kategori.index')
-            ->with('success','Kategori berhasil di update');
+            ->with('feedback','<div class="alert alert-success"><p>Kategori berhasil di update</p></div>');
     }
     
+    //Fungsi hapus berita
     public function destroy($id)
     {
-        //Hapus data kategori yang dipilih pada tabel
+        //Hapus data kategori yang dipilih dari tb_kategori
         Kategori::find($id)->delete();
 
         //Redirect ke halaman indeks kategori
         return redirect()->route('kategori.index')
-            ->with('success','Kategori berhasil dihapus');
+            ->with('feedback','<div class="alert alert-success"><p>Kategori berhasil dihapus</p></div>');
     }
 
 }
