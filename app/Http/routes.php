@@ -8,7 +8,7 @@
 *
 **/
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index'); //Landing page
 
 //Menerapkan middleware web ke library Laravel Auth
 Route::group(['middleware' => 'web'], function()
@@ -36,10 +36,13 @@ Route::group(['middleware' => ['web', 'auth', 'id_role']], function()
 	});
 });
 
-//Awal - Route Admin
-
 //Manajemen Berita
 Route::resource('berita', 'BeritaController');
+Route::resource('komenBerita', 'KomenBeritaController', ['only' => ['destroy']]); //Manajemen Komentar Berita - Hanya bisa hapus komentar
+
+//Manajemen Artikel
+Route::resource('artikel', 'ArtikelController');
+Route::resource('komenArtikel', 'KomenArtikelController', ['only' => ['destroy']]); //Manajemen Komentar Artikel - Hanya bisa hapus komentar
 
 //Manajemen Kategori
 Route::resource('kategori', 'KategoriController', ['except' => ['show']]);
@@ -56,4 +59,3 @@ Route::resource('admin', 'AdminController', ['except' => ['show']]);
 //Manajemen Pengguna
 Route::resource('user', 'UserController', ['except' => ['show']]);
 
-//Akhir - Route Admin

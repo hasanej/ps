@@ -46,14 +46,14 @@
                             </td>
                             <td>
                                 <div class="btn-group">
-                                <a href="{{ route('berita.show',$berita->id) }}"><button title="Lihat" type="button" class="btn btn-primary">
+                                <a href="{{ route('berita.show',$berita->id) }}"><button title="Komentar" type="button" class="btn btn-primary">
                                     <i class="fa fa-comments"></i>
                                 </button></a>
                                 <a href="{{ route('berita.edit',$berita->id) }}"><button title="Edit" type="button" class="btn btn-success">
                                     <i class="fa fa-pencil-square-o"></i>
                                 </button></a>
                                 {!! Form::open(['method' => 'DELETE','route' => ['berita.destroy', $berita->id],'style'=>'display:inline']) !!}
-                                    <button title="Hapus" type="submit" class="btn btn-danger" data-confirm="Hapus data ?" >
+                                    <button title="Hapus" type="submit" class="btn btn-danger" data-confirm="Hapus berita ?" >
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                 {!! Form::close() !!}
