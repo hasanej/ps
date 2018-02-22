@@ -22,9 +22,9 @@ class RoleSeeder extends Seeder
         DB::table('tb_role')->delete();
 
         DB::table('tb_role')->insert(array(
-            array('name'=>'Superadmin'),
-            array('name'=>'Admin'),
-            array('name'=>'User'),
+            array('nama'=>'Superadmin'),
+            array('nama'=>'Admin'),
+            array('nama'=>'User'),
         ));
     }
 }

@@ -14,10 +14,10 @@ class CreateArtikelTable extends Migration
     {
         Schema::create('tb_artikel', function (Blueprint $table) {
             $table->increments('id');
+            $table->smallInteger('id_kategori')->default(1);
             $table->string('penulis');
             $table->string('judul');
             $table->text('konten');
-            $table->string('kategori');
             $table->string('gambar');
             $table->boolean('status')->default(1);
             $table->timestamps();

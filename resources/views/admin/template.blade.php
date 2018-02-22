@@ -9,13 +9,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<style>
-		ul.wysihtml5-toolbar li a[title="Insert image"] { display: none; }
-		ul.wysihtml5-toolbar li a[title="Insert link"] { display: none; }
-		ul.wysihtml5-toolbar li a[title="Outdent"] { display: none; }
-		ul.wysihtml5-toolbar li a[title="Indent"] { display: none; }
-		ul.wysihtml5-toolbar li a[data-wysihtml5-command-value="blockquote"] { display: none; }
-	</style>
 
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -78,7 +71,7 @@
 			              		<a href="{{ route('berita.index') }}"><i class="fa fa-list-alt"></i>Daftar Berita</a>
 			              	</li>
 			            	<li class="{!! Request::is('artikel') ? 'active' : '' !!}">
-			            		<a href="{{ 'komenBerita' }}"><i class="fa fa-comments-o"></i>Daftar Artikel</a>
+			            		<a href="{{ route('artikel.index') }}"><i class="fa fa-comments-o"></i>Daftar Artikel</a>
 			            	</li>
 			          	</ul>
 			        </li>
