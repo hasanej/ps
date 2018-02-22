@@ -15,6 +15,7 @@ use File; //Library upload file
 use App\Berita; //Model berita
 use App\FilesBerita; //Model file berita
 use App\Kategori; //Model kategori
+use App\KomenBerita; //Model komentar berita
 use Illuminate\Http\Request; //Library untuk request input
 use App\Http\Controllers\Controller; //Controller Laravel 
 
@@ -140,13 +141,17 @@ class BeritaController extends Controller
             ->with('feedback','<div class="alert alert-success"><p>Berita berhasil ditambah</p></div>');
     }
 
+    //Fungsi menampilkan daftar komentar berita
     public function show($id)
     {
-        //Ambil data berita yang dipilih dari tb_berita
-        $data = Berita::find($id);
+        //Nomor urut data pada view
+        $number = 0;
 
-        //Menampilkan data berita yang dipilih
-        return view('admin.berita.show',compact('data'));
+        //Ambil data komentar berita dari tb_komen_berita
+        $data = KomenBerita::where('id_berita', $id)->get();
+
+        //Menampilkan data komentar pada berita yang dipilih
+        return view('admin.berita.komen',compact('data', 'number'));
     }
 
     //Fungsi menampilkan view edit berita

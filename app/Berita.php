@@ -19,14 +19,20 @@ class Berita extends Model
     //Kolom yang dapat diisi
     public $fillable = ['penulis', 'judul', 'konten', 'gambar', 'file', 'status', 'id_kategori'];
 
-    //Setiap berita punya satu kategori
+    //Satu berita punya satu kategori
     public function kategori()
     {
         return $this->hasOne('App\Kategori', 'id', 'id_kategori');
     }
 
-    //Setiap berita bisa punya banyak file 
+    //Satu berita bisa punya banyak file 
     public function fileBerita()
+    {
+        return $this->hasMany('App\FilesBerita', 'id_berita', 'id');
+    }
+
+    //Satu berita bisa punya banyak komentar
+    public function komenBerita()
     {
         return $this->hasMany('App\FilesBerita', 'id_berita', 'id');
     }
