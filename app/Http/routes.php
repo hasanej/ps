@@ -22,17 +22,7 @@ Route::group(['middleware' => ['web', 'auth', 'id_role']], function()
 {
 	Route::get('administrator', function()
 	{
-		//Jika user adalah admin
-		if(Auth::user()->id_role < 3 )
-		{
 			return view('admin.beranda');
-		} 
-		//Jika user bukan admin
-		else
-		{
-			return view('user');
-		}
-
 	});
 });
 

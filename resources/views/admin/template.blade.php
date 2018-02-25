@@ -85,11 +85,13 @@
 	            		<span class="pull-right-container">
             			</span></a>
 	            	</li>
+	            	@if((Auth::user()->id_role)==1)
 	            	<li class="{!! Request::is('admin') ? 'active' : '' !!}"><a href="{{ route('admin.index') }}">
             			<i class="fa fa-user"></i> <span>Manajemen Administrator</span>
 	            		<span class="pull-right-container">
             			</span></a>
 	            	</li>
+	            	@endif
 	      		</ul>
 	    	</section>
 	  	</aside>

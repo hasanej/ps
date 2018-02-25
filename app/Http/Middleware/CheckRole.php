@@ -25,7 +25,7 @@ class CheckRole
     public function handle($request, Closure $next)
     {
         //Cek apakah user adalah admin
-        if(auth()->check() && $request->user()->id_role < 2)
+        if(auth()->check() && $request->user()->id_role < 3)
         {
             //Proses ke tampilan halaman admin
             return $next($request);
