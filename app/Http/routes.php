@@ -34,6 +34,9 @@ Route::resource('komenBerita', 'KomenBeritaController', ['only' => ['destroy']])
 Route::resource('artikel', 'ArtikelController');
 Route::resource('komenArtikel', 'KomenArtikelController', ['only' => ['destroy']]); //Manajemen Komentar Artikel - Hanya bisa hapus komentar
 
+//Manajemen Publikasi
+Route::resource('publikasi', 'PublikasiController');
+
 //Manajemen Kategori
 Route::resource('kategori', 'KategoriController', ['except' => ['show']]);
 
