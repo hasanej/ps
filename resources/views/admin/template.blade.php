@@ -58,7 +58,7 @@
 
 	      		<ul class="sidebar-menu" data-widget="tree">
 	        		<li class="header">MENU</li>
-	        		<li class="treeview {!! Request::is('berita') ? 'active' : Request::is('artikel') ? 'active' : '' !!}">
+	        		<li class="treeview {!! Request::is('berita') ? 'active' : Request::is('artikel') ? 'active' : Request::is('publikasi') ? 'active' : '' !!}">
 			          	<a href="#">
 			            	<i class="fa fa-newspaper-o"></i> 
 			            	<span>Manajemen Konten</span>
@@ -68,10 +68,13 @@
 			          	</a>
 			          	<ul class="treeview-menu">
 			            	<li class="{!! Request::is('berita') ? 'active' : '' !!}">
-			              		<a href="{{ route('berita.index') }}"><i class="fa fa-list-alt"></i>Daftar Berita</a>
+			              		<a href="{{ route('berita.index') }}"><i class="fa fa-list-alt"></i>Berita</a>
 			              	</li>
 			            	<li class="{!! Request::is('artikel') ? 'active' : '' !!}">
-			            		<a href="{{ route('artikel.index') }}"><i class="fa fa-comments-o"></i>Daftar Artikel</a>
+			            		<a href="{{ route('artikel.index') }}"><i class="fa fa-file-text"></i>Artikel</a>
+			            	</li>
+			            	<li class="{!! Request::is('publikasi') ? 'active' : '' !!}">
+			            		<a href="{{ route('publikasi.index') }}"><i class="fa fa-book"></i>Publikasi</a>
 			            	</li>
 			          	</ul>
 			        </li>
