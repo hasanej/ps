@@ -26,6 +26,9 @@ Route::group(['middleware' => ['web', 'auth', 'id_role']], function()
 	});
 });
 
+//Manajemen Beranda
+Route::resource('beranda', 'BerandaController', ['only' => ['index', 'store']]);
+
 //Manajemen Berita
 Route::resource('berita', 'BeritaController');
 Route::resource('komenBerita', 'KomenBeritaController', ['only' => ['destroy']]); //Manajemen Komentar Berita - Hanya bisa hapus komentar
