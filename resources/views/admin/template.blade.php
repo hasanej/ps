@@ -58,6 +58,11 @@
 
 	      		<ul class="sidebar-menu" data-widget="tree">
 	        		<li class="header">MENU</li>
+	        		<li class="{!! Request::is('beranda') ? 'active' : '' !!}"><a href="{{ route('beranda.index') }}">
+            			<i class="fa fa-list"></i> <span>Beranda</span>
+	            		<span class="pull-right-container">
+            			</span></a>
+	            	</li>
 	        		<li class="treeview {!! Request::is('berita') ? 'active' : Request::is('artikel') ? 'active' : Request::is('publikasi') ? 'active' : '' !!}">
 			          	<a href="#">
 			            	<i class="fa fa-newspaper-o"></i> 
