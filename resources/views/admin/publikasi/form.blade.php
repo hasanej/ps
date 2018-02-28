@@ -31,13 +31,13 @@
         </div>
     </div>
     <div class="form-group">
-        <label>Input File</label>
+        <label><i class="fa fa-files-o"></i> Input File</label>
         <input type="file" name="file[]" multiple>
-        <p class="help-block">(Supported format : .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf)</p>
+        <p class="help-block">Dapat upload lebih dari satu file<br>Format yang didukung : .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf</p>
         @if(!empty($daftarFile))            
             <label>Daftar File</label>
             @foreach($daftarFile as $x)
-                <p>{{ $x->file }}</p>
+                <p><a href="{{ asset('upload/file_publikasi/'.$x->file) }}">{{ $x->file }}</a></p>
             @endforeach
         @endif
     </div>
