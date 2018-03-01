@@ -59,13 +59,13 @@
 	      		<ul class="sidebar-menu" data-widget="tree">
 	        		<li class="header">MENU</li>
 	        		<li class="{!! Request::is('beranda') ? 'active' : '' !!}"><a href="{{ route('beranda.index') }}">
-            			<i class="fa fa-list"></i> <span>Beranda</span>
+            			<i class="fa fa-home"></i> <span>Beranda</span>
 	            		<span class="pull-right-container">
             			</span></a>
 	            	</li>
 	        		<li class="treeview {!! Request::is('berita') ? 'active' : Request::is('artikel') ? 'active' : Request::is('publikasi') ? 'active' : '' !!}">
 			          	<a href="#">
-			            	<i class="fa fa-newspaper-o"></i> 
+			            	<i class="fa fa-list-alt"></i> 
 			            	<span>Manajemen Konten</span>
 			            	<span class="pull-right-container">
 			              		<i class="fa fa-angle-left pull-right"></i>
@@ -73,10 +73,13 @@
 			          	</a>
 			          	<ul class="treeview-menu">
 			            	<li class="{!! Request::is('berita') ? 'active' : '' !!}">
-			              		<a href="{{ route('berita.index') }}"><i class="fa fa-list-alt"></i>Berita</a>
+			              		<a href="{{ route('berita.index') }}"><i class="fa fa-newspaper-o"></i>Berita</a>
 			              	</li>
 			            	<li class="{!! Request::is('artikel') ? 'active' : '' !!}">
 			            		<a href="{{ route('artikel.index') }}"><i class="fa fa-file-text"></i>Artikel</a>
+			            	</li>
+			            	<li class="{!! Request::is('riset') ? 'active' : '' !!}">
+			            		<a href="{{ route('riset.index') }}"><i class="fa fa-rocket"></i>Riset</a>
 			            	</li>
 			            	<li class="{!! Request::is('publikasi') ? 'active' : '' !!}">
 			            		<a href="{{ route('publikasi.index') }}"><i class="fa fa-book"></i>Publikasi</a>
